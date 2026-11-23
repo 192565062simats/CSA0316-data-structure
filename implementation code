@@ -1,0 +1,1608 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Classroom Attendance System</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginScreen">
+
+    <div class="login-left">
+
+        <div class="brand-large">
+            <div class="brand-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h1>Virtual Classroom</h1>
+            <h2>Attendance System</h2>
+
+            <p>
+                Smart attendance management powered by
+                Hash Table technology.
+            </p>
+        </div>
+
+        <div class="login-features">
+
+            <div>
+                <i class="fa-solid fa-bolt"></i>
+                <span>Fast Student Search</span>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Duplicate Prevention</span>
+            </div>
+
+            <div>
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Smart Attendance Reports</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="login-right">
+
+        <div class="login-card">
+
+            <div class="mobile-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h2>Welcome Back</h2>
+
+            <p class="login-subtitle">
+                Sign in to continue
+            </p>
+
+
+            <div class="role-selector">
+
+                <button id="adminRoleBtn"
+                        class="role-btn active"
+                        onclick="selectRole('admin')">
+
+                    <i class="fa-solid fa-user-shield"></i>
+                    Admin
+
+                </button>
+
+                <button id="studentRoleBtn"
+                        class="role-btn"
+                        onclick="selectRole('student')">
+
+                    <i class="fa-solid fa-user-graduate"></i>
+                    Student
+
+                </button>
+
+            </div>
+
+
+            <!-- ADMIN LOGIN -->
+
+            <form id="adminLoginForm"
+                  onsubmit="adminLogin(event)">
+
+                <label>Username</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <input type="text"
+                           id="adminUsername"
+                           placeholder="Enter admin username"
+                           required>
+
+                </div>
+
+
+                <label>Password</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                           id="adminPassword"
+                           placeholder="Enter password"
+                           required>
+
+                </div>
+
+
+                <button class="login-btn"
+                        type="submit">
+
+                    Login as Administrator
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+                <div class="demo-login">
+                    Demo: <b>admin</b> / <b>admin123</b>
+                </div>
+
+            </form>
+
+
+            <!-- STUDENT LOGIN -->
+
+            <form id="studentLoginForm"
+                  style="display:none;"
+                  onsubmit="studentLogin(event)">
+
+                <label>Student ID</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-id-card"></i>
+
+                    <input type="text"
+                           id="studentId"
+                           placeholder="Example: STU1001"
+                           required>
+
+                </div>
+
+
+                <label>Password</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                           id="studentPassword"
+                           placeholder="Enter password"
+                           required>
+
+                </div>
+
+
+                <button class="login-btn"
+                        type="submit">
+
+                    Login as Student
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+                <div class="demo-login">
+                    Student demo: <b>STU1001</b> / <b>student123</b>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MAIN APPLICATION ================= -->
+
+<div id="app" style="display:none;">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <div>
+                <h2>VCAS</h2>
+                <span>Attendance System</span>
+            </div>
+
+        </div>
+
+
+        <div class="user-box">
+
+            <div class="avatar"
+                 id="sidebarAvatar">
+
+                A
+
+            </div>
+
+            <div>
+
+                <strong id="sidebarName">
+                    Administrator
+                </strong>
+
+                <small id="sidebarRole">
+                    Administrator
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADMIN MENU -->
+
+        <nav id="adminMenu">
+
+            <div class="menu-title">
+                MAIN MENU
+            </div>
+
+            <button onclick="openPage('dashboard')"
+                    class="menu-item active"
+                    data-page="dashboard">
+
+                <i class="fa-solid fa-chart-pie"></i>
+                Dashboard
+
+            </button>
+
+
+            <button onclick="openPage('students')"
+                    class="menu-item"
+                    data-page="students">
+
+                <i class="fa-solid fa-users"></i>
+                Students
+
+            </button>
+
+
+            <button onclick="openPage('attendance')"
+                    class="menu-item"
+                    data-page="attendance">
+
+                <i class="fa-solid fa-calendar-check"></i>
+                Attendance
+
+            </button>
+
+
+            <button onclick="openPage('reports')"
+                    class="menu-item"
+                    data-page="reports">
+
+                <i class="fa-solid fa-file-lines"></i>
+                Reports
+
+            </button>
+
+
+            <button onclick="openPage('hashTable')"
+                    class="menu-item"
+                    data-page="hashTable">
+
+                <i class="fa-solid fa-table-cells"></i>
+                Hash Table
+
+            </button>
+
+
+            <div class="menu-title">
+                SYSTEM
+            </div>
+
+
+            <button onclick="showSettings()"
+                    class="menu-item"
+                    data-page="settings">
+
+                <i class="fa-solid fa-gear"></i>
+                Settings
+
+            </button>
+
+
+            <button onclick="logout()"
+                    class="menu-item logout-item">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+
+            </button>
+
+        </nav>
+
+
+        <!-- STUDENT MENU -->
+
+        <nav id="studentMenu"
+             style="display:none;">
+
+            <div class="menu-title">
+                STUDENT MENU
+            </div>
+
+
+            <button onclick="openPage('studentDashboard')"
+                    class="menu-item active"
+                    data-page="studentDashboard">
+
+                <i class="fa-solid fa-house"></i>
+                My Dashboard
+
+            </button>
+
+
+            <button onclick="openPage('myAttendance')"
+                    class="menu-item"
+                    data-page="myAttendance">
+
+                <i class="fa-solid fa-calendar-check"></i>
+                My Attendance
+
+            </button>
+
+
+            <button onclick="openPage('myProfile')"
+                    class="menu-item"
+                    data-page="myProfile">
+
+                <i class="fa-solid fa-user"></i>
+                My Profile
+
+            </button>
+
+
+            <div class="menu-title">
+                ACCOUNT
+            </div>
+
+
+            <button onclick="showSettings()"
+                    class="menu-item"
+                    data-page="settings">
+
+                <i class="fa-solid fa-gear"></i>
+                Settings
+
+            </button>
+
+
+            <button onclick="logout()"
+                    class="menu-item logout-item">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+
+            </button>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+                <p id="pageSubtitle">
+                    Overview of your attendance system
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="date-display">
+
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <span id="currentDate"></span>
+
+                </div>
+
+
+                <div class="top-avatar"
+                     id="topAvatar">
+
+                    A
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= ADMIN DASHBOARD ================= -->
+
+        <section id="dashboard"
+                 class="page active-page">
+
+            <div class="welcome-banner">
+
+                <div>
+
+                    <span class="welcome-small">
+                        Welcome back
+                    </span>
+
+                    <h2>
+                        Attendance Management Dashboard
+                    </h2>
+
+                    <p>
+                        Monitor students, attendance and
+                        Hash Table performance from one place.
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-chart-line"></i>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Total Students</span>
+
+                        <h3 id="totalStudents">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Present Today</span>
+
+                        <h3 id="presentToday">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-user-xmark"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Absent Today</span>
+
+                        <h3 id="absentToday">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Attendance Rate</span>
+
+                        <h3 id="attendanceRate">
+                            0%
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <div class="panel chart-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>Attendance Overview</h3>
+
+                            <p>
+                                Today's attendance distribution
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <canvas id="attendanceChart"></canvas>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>Hash Table Status</h3>
+
+                            <p>
+                                Data structure performance
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hash-status">
+
+                        <div class="hash-circle">
+                            31
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Hash Table Size
+                            </strong>
+
+                            <p>
+                                Linear probing enabled
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="system-status">
+
+                        <div>
+                            <span>Student Records</span>
+                            <b id="dashboardHashRecords">0</b>
+                        </div>
+
+                        <div>
+                            <span>Duplicate Protection</span>
+                            <b class="status-on">ON</b>
+                        </div>
+
+                        <div>
+                            <span>Search Method</span>
+                            <b>Hashing</b>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= STUDENTS ================= -->
+
+        <section id="students"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Student Management</h2>
+
+                    <p>
+                        Register and manage classroom students.
+                    </p>
+
+                </div>
+
+
+                <button class="primary-btn"
+                        onclick="openStudentModal()">
+
+                    <i class="fa-solid fa-plus"></i>
+                    Add Student
+
+                </button>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-search"></i>
+
+                    <input type="text"
+                           id="studentSearch"
+                           placeholder="Search Student ID, name or department..."
+                           oninput="renderStudents()">
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Roll Number</th>
+                            <th>Department</th>
+                            <th>Class</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="studentTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ATTENDANCE ================= -->
+
+        <section id="attendance"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Attendance Management</h2>
+
+                    <p>
+                        Mark attendance using unique Student ID.
+                    </p>
+
+                </div>
+
+
+                <div class="date-picker-box">
+
+                    <label>Date</label>
+
+                    <input type="date"
+                           id="attendanceDate"
+                           onchange="renderAttendance()">
+
+                </div>
+
+            </div>
+
+
+            <div class="attendance-summary">
+
+                <div>
+                    <span>Present</span>
+                    <strong id="attendancePresent">0</strong>
+                </div>
+
+                <div>
+                    <span>Absent</span>
+                    <strong id="attendanceAbsent">0</strong>
+                </div>
+
+                <div>
+                    <span>Percentage</span>
+                    <strong id="attendancePercentage">0%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="attendanceTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= REPORTS ================= -->
+
+        <section id="reports"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Attendance Reports</h2>
+
+                    <p>
+                        View student-wise attendance performance.
+                    </p>
+
+                </div>
+
+
+                <button class="primary-btn"
+                        onclick="exportCSV()">
+
+                    <i class="fa-solid fa-download"></i>
+                    Export CSV
+
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Attendance %</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="reportTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= HASH TABLE ================= -->
+
+        <section id="hashTable"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Hash Table Visualization</h2>
+
+                    <p>
+                        Student ID is used as the unique hash key.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="hash-info-grid">
+
+                <div class="info-card">
+
+                    <span>Table Size</span>
+
+                    <strong id="tableSize">
+                        31
+                    </strong>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>Stored Records</span>
+
+                    <strong id="storedRecords">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <span>Collision Method</span>
+
+                    <strong>
+                        Linear Probing
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="hash-grid"
+                 id="hashTableGrid"></div>
+
+        </section>
+
+
+        <!-- ================= STUDENT DASHBOARD ================= -->
+
+        <section id="studentDashboard"
+                 class="page">
+
+            <div class="welcome-banner student-banner">
+
+                <div>
+
+                    <span class="welcome-small">
+                        Student Portal
+                    </span>
+
+                    <h2 id="studentWelcome">
+                        Welcome
+                    </h2>
+
+                    <p>
+                        Track your classroom attendance
+                        and academic participation.
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-user-graduate"></i>
+
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Total Sessions</span>
+
+                        <h3 id="myTotalSessions">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Present</span>
+
+                        <h3 id="myPresent">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon red">
+                        <i class="fa-solid fa-user-xmark"></i>
+                    </div>
+
+                    <div>
+
+                        <span>Absent</span>
+
+                        <h3 id="myAbsent">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+
+                    <div>
+
+                        <span>My Attendance</span>
+
+                        <h3 id="myPercentage">
+                            0%
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h3>My Attendance Status</h3>
+
+                </div>
+
+                <div class="progress-container">
+
+                    <div class="progress-bar">
+
+                        <div id="myProgress"
+                             class="progress-fill">
+
+                        </div>
+
+                    </div>
+
+                    <span id="myProgressText">
+                        0%
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MY ATTENDANCE ================= -->
+
+        <section id="myAttendance"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>My Attendance</h2>
+
+                    <p>
+                        Your complete attendance history.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Date</th>
+                            <th>Status</th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="myAttendanceBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MY PROFILE ================= -->
+
+        <section id="myProfile"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>My Profile</h2>
+
+                    <p>
+                        Your registered student information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <div class="profile-avatar"
+                     id="profileAvatar">
+
+                    S
+
+                </div>
+
+
+                <div class="profile-details">
+
+                    <h2 id="profileName">
+                        Student
+                    </h2>
+
+                    <span id="profileId">
+                        STU1001
+                    </span>
+
+                    <div class="profile-grid">
+
+                        <div>
+                            <label>Roll Number</label>
+                            <strong id="profileRoll"></strong>
+                        </div>
+
+                        <div>
+                            <label>Email</label>
+                            <strong id="profileEmail"></strong>
+                        </div>
+
+                        <div>
+                            <label>Department</label>
+                            <strong id="profileDepartment"></strong>
+                        </div>
+
+                        <div>
+                            <label>Class</label>
+                            <strong id="profileClass"></strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SETTINGS ================= -->
+
+        <section id="settings"
+                 class="page">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Settings</h2>
+
+                    <p id="settingsSubtitle">
+                        Manage your account and system settings.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADMIN SETTINGS -->
+
+            <div id="adminSettingsPanel">
+
+                <div class="settings-grid">
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+
+                        <h3>Administrator Profile</h3>
+
+                        <p>Username</p>
+
+                        <strong>admin</strong>
+
+                        <p>Role</p>
+
+                        <strong>System Administrator</strong>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                        <h3>Student Management</h3>
+
+                        <p>Total Registered Students</p>
+
+                        <strong id="settingsStudentCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-table-cells"></i>
+                        </div>
+
+                        <h3>Hash Table</h3>
+
+                        <p>Hash Table Size</p>
+
+                        <strong id="settingsHashSize">
+                            31
+                        </strong>
+
+                        <p>Collision Method</p>
+
+                        <strong>Linear Probing</strong>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <h3>Attendance Security</h3>
+
+                        <p>Duplicate Prevention</p>
+
+                        <strong class="status-on">
+                            Enabled
+                        </strong>
+
+                        <p>Unique Key</p>
+
+                        <strong>Student ID</strong>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+
+                        <h3>System Storage</h3>
+
+                        <p>Student Data</p>
+
+                        <strong>Local Storage</strong>
+
+                        <p>System Status</p>
+
+                        <strong class="status-on">
+                            Online
+                        </strong>
+
+                    </div>
+
+
+                    <div class="settings-card">
+
+                        <div class="settings-icon">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+
+                        <h3>Attendance System</h3>
+
+                        <p>Attendance Records</p>
+
+                        <strong id="settingsAttendanceRecords">
+                            0
+                        </strong>
+
+                        <p>Tracking</p>
+
+                        <strong>Active</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STUDENT SETTINGS -->
+
+            <div id="studentSettingsPanel"
+                 style="display:none;">
+
+                <div class="student-settings-card">
+
+                    <div class="settings-profile-header">
+
+                        <div class="profile-avatar"
+                             id="settingsStudentAvatar">
+
+                            S
+
+                        </div>
+
+                        <div>
+
+                            <h2 id="settingsStudentName">
+                                Student
+                            </h2>
+
+                            <p id="settingsStudentId">
+                                STU1001
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-information">
+
+                        <div>
+                            <label>Student ID</label>
+                            <strong id="settingsId"></strong>
+                        </div>
+
+                        <div>
+                            <label>Name</label>
+                            <strong id="settingsName"></strong>
+                        </div>
+
+                        <div>
+                            <label>Roll Number</label>
+                            <strong id="settingsRoll"></strong>
+                        </div>
+
+                        <div>
+                            <label>Email</label>
+                            <strong id="settingsEmail"></strong>
+                        </div>
+
+                        <div>
+                            <label>Department</label>
+                            <strong id="settingsDepartment"></strong>
+                        </div>
+
+                        <div>
+                            <label>Class</label>
+                            <strong id="settingsClass"></strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="student-account-status">
+
+                        <div>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            <div>
+
+                                <strong>Account Status</strong>
+
+                                <p>
+                                    Active student account
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <div>
+
+                                <strong>Access Level</strong>
+
+                                <p>
+                                    Student Portal
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= STUDENT MODAL ================= -->
+
+<div id="studentModal"
+     class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2 id="modalTitle">
+                    Add Student
+                </h2>
+
+                <p>
+                    Enter student registration details.
+                </p>
+
+            </div>
+
+            <button onclick="closeStudentModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <form onsubmit="saveStudent(event)">
+
+            <input type="hidden"
+                   id="editStudentId">
+
+
+            <div class="form-grid">
+
+                <div>
+
+                    <label>Student ID</label>
+
+                    <input type="text"
+                           id="formStudentId"
+                           placeholder="STU1001"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Name</label>
+
+                    <input type="text"
+                           id="formStudentName"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Roll Number</label>
+
+                    <input type="text"
+                           id="formRoll"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Email</label>
+
+                    <input type="email"
+                           id="formEmail"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Department</label>
+
+                    <input type="text"
+                           id="formDepartment"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Class</label>
+
+                    <input type="text"
+                           id="formClass"
+                           required>
+
+                </div>
+
+
+                <div>
+
+                    <label>Password</label>
+
+                    <input type="text"
+                           id="formPassword"
+                           value="student123"
+                           required>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="secondary-btn"
+                        onclick="closeStudentModal()">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+
+                    <i class="fa-solid fa-save"></i>
+                    Save Student
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div id="toast"
+     class="toast">
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    <span id="toastMessage">
+        Success
+    </span>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
